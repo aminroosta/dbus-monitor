@@ -4,6 +4,7 @@ var config = require('./config.js');
 var connection = null;
 var logger = function() { console.warn(arguments); }
 
+/* execute a query on the database */
 function execute(str) {
   return new Promise((resolve, reject) =>
       connection.query(str, (err, rows, fields) => {
@@ -43,6 +44,19 @@ function init() {
     return execute('use `' + config.database + '`;');
 }
 
+/* select rows from table_name where row.id > last_id
+ * last_id is optional */
+function select(table_name, last_id) {
+  last_id = last_id || 0; /* select all rows if no last_id is provided */
+    var query = `select * from \`${table_name}\` as tbl where tbl.id > ${last_id};`;
+    return execute(query)
+          .catch(err => {
+            logger(err);
+            return err;
+          });
+}
+
+/* run an interval to insert random data into database tables. FOR DEBUG AND TEST PURPOSSES */
 function insert_random_data_every(ms) {
   ms = ms || 500; /* 500 ms by default */
   var generate = () => `'${Math.random().toString(36).substr(2, 5)}'`; /* generate a random string */
@@ -56,21 +70,8 @@ function insert_random_data_every(ms) {
   }, ms);
 }
 
-/* select rows from table_name where row.id > last_id
- * last_id is optional */
-function select(table_name, last_id) {
-  last_id = last_id || 0; /* select all rows if no last_id is provided */
-    var query = `select * from \`${table_name}\` as tbl where tbl.id > ${last_id};`;
-    return execute(query)
-          .then((rows, fields) => {
-            logger(JSON.stringify(rows));
-          })
-          .catch(err => {
-            logger(err);
-            return err;
-          });
-}
-
-init()
-  .then(() => insert_random_data_every(1000))
-  .then(() => select('left-table', 10));
+module.exports = {
+  init: init,
+  select: select,
+  insert_random_data_every: insert_random_data_every
+};
