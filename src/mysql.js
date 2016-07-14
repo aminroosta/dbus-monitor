@@ -20,8 +20,10 @@ function create_tables() {
     var query = `create table \`${table.name}\` (\n`;
     for(var col in table.fields)
       query += `${col} ${table.fields[col]},\n`;
-    query += `PRIMARY KEY ( ${table.primary_key} )\n`;
-    query += ');';
+    query += `PRIMARY KEY ( ${table.primary_key} )`;
+    if(table.foreign_key)
+      query +=`,FOREIGN KEY (${table.foreign_key}) REFERENCES ${table.references}`;
+    query += '\n);';
 
     return execute(query);
   });
@@ -60,10 +62,20 @@ function select(table_name, last_id) {
 function insert_random_data_every(ms) {
   ms = ms || 500; /* 500 ms by default */
   var generate = () => `'${Math.random().toString(36).substr(2, 5)}'`; /* generate a random string */
+  execute('insert into run (filename) values (\'test\')').catch(logger);
   setInterval(() => {
-    config.tables.forEach(table => {
-      var keys = Object.keys(table.fields).filter(key => key !== table.primary_key);
+    config.tables.filter(t => t.name !== 'run').forEach(table => {
+      var keys = Object.keys(table.fields).filter(key => key !== table.foreign_key && key !== table.primary_key );
       var values = keys.map(generate);
+
+      table.foreign_key && keys.push(table.foreign_key);
+      table.foreign_key && values.push(1);
+
+      if(table.fields[table.primary_key].includes('AUTO_INCREMENT') == false){
+        keys.push(table.primary_key);
+        values.push(new Date()*1/100%1000000000|0);
+      }
+
       var query = `insert into \`${table.name}\` (${keys.join(',')}) values (${values.join(',')})`;
       execute(query).catch(logger); /* insert the new row */
     })

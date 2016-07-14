@@ -62,7 +62,7 @@ mysql
     () => console.log('server ready on %s', srv.url)
   ))
   .then(() => {
-    config.insert_random_data_every &&
-      mysql.insert_random_data_every(config.insert_random_data_every);
+    config.server.insert_random_data_every &&
+      mysql.insert_random_data_every(config.server.insert_random_data_every);
   })
   .catch(err => console.error(err));
