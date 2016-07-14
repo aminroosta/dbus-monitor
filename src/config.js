@@ -1,4 +1,8 @@
 module.exports = {
+    server: {
+      port: 8080,
+      insert_random_data_every: 1000, /* set to zero to disable, this is just for testing */
+    },
     db: {
       host     : 'localhost',
       user     : 'root',
@@ -26,5 +30,5 @@ module.exports = {
           'message': 'VARCHAR(4000)'
         }
       },
-    ]
+    ],
 };

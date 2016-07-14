@@ -27,17 +27,17 @@
             <div class="large-3 medium-6 columns">
               <div class="input-group">
                 <span class="input-group-label">Monitor interval</span>
-                <input class="input-group-field" type="number">
-                <a class="input-group-button button">Set</a>
+                <input rv-value='monitor.interval' class="input-group-field" type="number">
+                <a rv-on-click='monitor.set_interval' class="input-group-button button">Set</a>
               </div>
             </div>
             <div class="large-5 medium-6 columns">
-              <input type="file" class='button' />
-              <a href="#" class="success button"> Monitor file </a>
+              <input class='input-file button' type="file" />
+              <a rv-on-click='monitor.monitor_file' href="#" class="success button"> Monitor file </a>
             </div>
             <div class="large-4 medium-12 columns">
-              <a href="#" class="button">Monitor all</a>
-              <a href="#" class="alert button">Monitor pause</a>
+              <a rv-on-click='monitor.monitor_all' href="#" class="button">Monitor all</a>
+              <a rv-on-click='monitor.monitor_pause' href="#" class="alert button">Monitor pause</a>
             </div>
           </div>
         </div>
@@ -47,13 +47,11 @@
     <div class="row">
 
       <div class="large-4 medium-4 columns">
-        <h5>Here&rsquo;s your first table:</h5>
+        <h5>{first.name}:</h5>
         <table id='first-table'>
           <thead>
             <tr>
-              <th>Id</th>
-              <th>Name</th>
-              <th>Address</th>
+              <th rv-each-field='first.fields'>{field}</th>
             </tr>
           </thead>
           <tbody> </tbody>
@@ -61,14 +59,11 @@
       </div>
 
       <div class="large-8 medium-8 columns">
-        <h5>Here&rsquo;s your second table:</h5>
+        <h5>{second.name}:</h5>
         <table id='second-table'>
           <thead>
             <tr>
-              <th> Id <input type='text' class="search-input" placeholder="Search"> </th>
-              <th> Name <input type='text' class="search-input" placeholder="Search"> </th>
-              <th> Address <input type='text' class="search-input" placeholder="Search"> </th>
-              <th> Message <input type='text' class="search-input" placeholder="Search"> </th>
+              <th rv-each-field='second.fields'> {field} <input type='text' class="search-input" placeholder="Search"> </th>
             </tr>
           </thead>
           <tbody> </tbody>
