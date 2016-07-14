@@ -18,8 +18,36 @@ srv.get('/tables', function (req, res, next) {
     next();
 });
 
-srv.get('/query/:table_name/:last_id', function (req, res, next) {
-    mysql.select(req.params.table_name, req.params.last_id)
+srv.get('/query/log/:run_id/:last_id', function (req, res, next) {
+    if(!req.params.run_id) return next(new Error('"run_id" parameter missing'));
+    if(!req.params.last_id) return next(new Error('"last_id" parameter missing'));
+    mysql.execute(`select * from log where log.id > ${req.params.last_id} and log.run_id = ${req.params.run_id};`)
+        .then(data => {
+          res.send(data);
+          next();
+        })
+        .catch(err => {
+          console.error(err);
+          next(err);
+        });
+});
+
+srv.get('/query/process_list/:last_id', function (req, res, next) {
+    if(!req.params.last_id) return next(new Error('"last_id" parameter missing'));
+    mysql.execute(`select * from process_list as pl where pl.id > ${req.params.last_id};`)
+        .then(data => {
+          res.send(data);
+          next();
+        })
+        .catch(err => {
+          console.error(err);
+          next(err);
+        });
+});
+
+srv.get('/query/:table_name', function (req, res, next) {
+    if(!req.params.table_name) return next(new Error('"table_name" parameter missing'));
+    mysql.execute(`select * from ${req.params.table_name};`)
         .then(data => {
           res.send(data);
           next();

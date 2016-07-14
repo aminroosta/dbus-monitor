@@ -85,5 +85,6 @@ function insert_random_data_every(ms) {
 module.exports = {
   init: init,
   select: select,
+  execute: execute,
   insert_random_data_every: insert_random_data_every
 };
