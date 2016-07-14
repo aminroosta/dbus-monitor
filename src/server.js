@@ -7,11 +7,10 @@ srv.use(restify.queryParser({ mapParams: true }));
 srv.use(restify.jsonp());
 
 srv.get('/tables', function (req, res, next) {
-    var capitalize = k => k.charAt(0).toUpperCase() + k.slice(1);
     var tables = config.tables.map(function(table) {
       return {
-        name: capitalize(table.name),
-        fields: Object.keys(table.fields).map(capitalize) /* make fields upper case */
+        name: table.name,
+        fields: Object.keys(table.fields)
       }
     })
     res.send(tables);

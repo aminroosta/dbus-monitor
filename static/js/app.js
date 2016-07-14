@@ -1,5 +1,9 @@
 $(document).foundation();
 
+rivets.formatters.capitalize = function(value){
+  return value.charAt(0).toUpperCase() + value.slice(1).replace('_',' ');
+}
+
 function read_file(selector) {
   return new Promise(function(resolve, reject) {
 
@@ -114,9 +118,9 @@ state.get_tables = function() {
     .then(function (res) {
       var tables = res.data;
       notify('Found ' + tables.map(function(t) { return t.name; }).join(', ') + ' tables');
-      tables.length !== 2 && notify('Error: server must return 2 tables', 'error');
+      tables.length !== 3 && notify('Error: server must return 3 tables', 'error');
       state.first = tables[0];
-      state.second = tables[1];
+      state.second = tables[2];
     })
     .catch(function (error) {
       notify(error.toString(), 'error');

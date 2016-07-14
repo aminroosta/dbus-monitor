@@ -47,11 +47,11 @@
     <div class="row">
 
       <div class="large-4 medium-4 columns">
-        <h5>{first.name}:</h5>
+        <h5>{first.name | capitalize}:</h5>
         <table id='first-table'>
           <thead>
             <tr>
-              <th rv-each-field='first.fields'>{field}</th>
+              <th rv-each-field='first.fields'>{field | capitalize}</th>
             </tr>
           </thead>
           <tbody> </tbody>
@@ -59,11 +59,11 @@
       </div>
 
       <div class="large-8 medium-8 columns">
-        <h5>{second.name}:</h5>
+        <h5>{second.name | capitalize}:</h5>
         <table id='second-table'>
           <thead>
             <tr>
-              <th rv-each-field='second.fields'> {field} <input type='text' class="search-input" placeholder="Search"> </th>
+              <th rv-each-field='second.fields'> {field | capitalize} <input type='text' class="search-input" placeholder="Search"> </th>
             </tr>
           </thead>
           <tbody> </tbody>
