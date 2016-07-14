@@ -1,11 +1,18 @@
 var restify = require('restify');
+var config = require('./config.js');
 
 var srv = restify.createServer();
 srv.use(restify.queryParser());
 srv.use(restify.jsonp());
 
-srv.get('/hello', function (req, res, next) {
-    res.send({hello: 'world'});
+srv.get('/tables', function (req, res, next) {
+    var tables = config.tables.map(function(table) {
+      return {
+        name: table.name,
+        fields: Object.keys(table.fields).map(k => k.charAt(0).toUpperCase() + k.slice(1)) /* make fields upper case */
+      }
+    })
+    res.send(tables);
     next();
 });
 

@@ -1,0 +1,43 @@
+/*--------------- fix callout styles -------------------------------------*/
+input[type=file] {
+  height: 40px;
+  width: calc(100% - 110px);
+}
+
+/*------------- remove spiners from input type=number -------------------*/
+input[type='number'] {
+    -moz-appearance:textfield;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+/*--------------- fix table styles *-------------------------------------*/
+table input {
+  padding: 3px 5px !important;
+  height: 2em !important;
+  margin: 0 !important;
+}
+/* hide the search section from jq-datatables */
+.dataTables_filter {
+    display:none;
+}
+
+/*--------------- fix notification messages ------------------------------*/
+.alert-box {
+  background: #008CBA;
+  padding: 10px;
+  color: white;
+  box-shadow: 0px 3px 15px #008CBA;
+}
+.alert-box.error {
+ background: #ec5840;
+}
+.alert-box .close {
+  display: inline-block;
+  color: white;
+  float:right;
+  padding: 0 5px;
+}
