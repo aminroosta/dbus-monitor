@@ -177,9 +177,6 @@ state.run_id_changed = function() {
   loginterval = setInterval(update_log_table, (state.monitor.interval * 1000) || 15000);
 }/*----------------------------- run id changed ----------------------*/
 
-state.moinotr_interval_changed = function() {
-}
-
 state.monitor.set_interval = function() {
   var interval = state.monitor.interval;
   if(!interval) return notify('Invalid interval value', 'error');
@@ -189,28 +186,35 @@ state.monitor.set_interval = function() {
       loginterval && clearInterval(loginterval);
       loginterval = setInterval(update_log_table, (interval * 1000) || 15000);
   }
-}
+}/*------------------------ set interval ------------------------*/
 
 state.monitor.monitor_all = function(){
-  notify('Monitor all request successful');
+  axios.get('/mointor/all')
+       .then(function() {
+          notify('Monitor all request successful.');
+       }).catch(warn);
 }
 state.monitor.monitor_pause = function() {
-  notify('Monitor puase request successful');
+  axios.get('/mointor/pause')
+       .then(function() {
+          notify('Monitor puase request successful');
+       }).catch(warn);
 }
 state.monitor.monitor_file = function() {
-  read_file('.input-file')
-    .then(function(d) {
-      notify('Requesting mointor file ...');
-      return axios
-        .post('/monitor/file', {
-          name: 'find-later',
-          content: d
-        });
+  var data = new FormData();
+  data.append('file', $('.input-file')[0].files[0]);
+  var config = {
+    progress: function(e) {
+      var percent = e.loaded / e.total;
+      console.warn(percent);
+    }
+  };
+  axios.put('/monitor/file', data, config)
+    .then(function (res) {
+      notify('Uploaded to : ' + res.data.path)
     })
-    .then(notify)
-    .catch(function(err) {
-      console.warn(err.data);
-      notify(err, 'error');
+    .catch(function() {
+      console.warn(arguments);
     });
 }/*---------------------- monitor file --------------------------*/
 

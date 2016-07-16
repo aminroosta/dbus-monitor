@@ -1,7 +1,9 @@
+var path = require('path');
 module.exports = {
     server: {
       port: 8080,
       insert_random_data_every: 1000, /* set to zero to disable, this is just for testing */
+      upload_dir: path.resolve(__dirname, "../uploads"),
     },
     db: {
       host     : 'localhost',

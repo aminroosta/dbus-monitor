@@ -1,9 +1,13 @@
+var fs = require('fs');
 var restify = require('restify');
 var config = require('./config.js');
 var mysql = require('./mysql.js');
 
 var srv = restify.createServer();
 srv.use(restify.queryParser({ mapParams: true }));
+srv.use(restify.bodyParser({
+  uploadDir: config.server.upload_dir
+}));
 srv.use(restify.jsonp());
 
 srv.get('/tables', function (req, res, next) {
@@ -44,22 +48,23 @@ srv.get('/query/:table_name', function (req, res, next) {
         });
 });
 
-srv.post('/monitor/file', function (req, res, next) {
-  console.warn(req.params);
-  if(!req.params.name) return next(new Error('parameter "name" is missing'));
-  if(!req.params.content) return next(new Error('"content" of file is missing'));
-  console.warn('------------------------------');
-  return
+srv.put('/monitor/file', function (req, res, next) {
+  var file = req.files.file;
+  if(!file) return next(new Error("No file found in the request!"));
+  var new_path = config.server.upload_dir + '/' + file.name;
+  fs.renameSync(file.path, new_path);
+  res.send({ok: true, path: new_path});
+  next();
+});
 
-    mysql.select(req.params.table_name, req.params.last_id)
-        .then(data => {
-          res.send(data);
-          next();
-        })
-        .catch(err => {
-          console.error(err);
-          next(err);
-        });
+
+srv.get('/mointor/all', function (req, res, next) {
+  res.send({ok: true})
+  next();
+});
+srv.get('/mointor/pause', function (req, res, next) {
+  res.send({ok: true})
+  next();
 });
 
 
