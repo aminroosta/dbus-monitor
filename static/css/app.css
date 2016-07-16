@@ -41,3 +41,8 @@ table input {
   float:right;
   padding: 0 5px;
 }
+
+
+.table {
+  height: 800px;
+}

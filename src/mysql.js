@@ -60,7 +60,7 @@ function select(table_name, last_id) {
 
 /* run an interval to insert random data into database tables. FOR DEBUG AND TEST PURPOSSES */
 function insert_random_data_every(ms) {
-  ms = ms || 500; /* 500 ms by default */
+  ms = ms || 5000; /* 5000 ms by default */
   var generate = () => `'${Math.random().toString(36).substr(2, 5)}'`; /* generate a random string */
   execute('insert into run (filename) values (\'test\')').catch(logger);
   setInterval(() => {

@@ -31,19 +31,6 @@ srv.get('/query/log/:run_id/:last_id', function (req, res, next) {
         });
 });
 
-srv.get('/query/process_list/:last_id', function (req, res, next) {
-    if(!req.params.last_id) return next(new Error('"last_id" parameter missing'));
-    mysql.execute(`select * from process_list as pl where pl.id > ${req.params.last_id};`)
-        .then(data => {
-          res.send(data);
-          next();
-        })
-        .catch(err => {
-          console.error(err);
-          next(err);
-        });
-});
-
 srv.get('/query/:table_name', function (req, res, next) {
     if(!req.params.table_name) return next(new Error('"table_name" parameter missing'));
     mysql.execute(`select * from ${req.params.table_name};`)
