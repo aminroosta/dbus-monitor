@@ -62,7 +62,8 @@ function select(table_name, last_id) {
 function insert_random_data_every(ms) {
   ms = ms || 5000; /* 5000 ms by default */
   var generate = () => `'${Math.random().toString(36).substr(2, 5)}'`; /* generate a random string */
-  execute('insert into run (filename) values (\'test\')').catch(logger);
+  execute('insert into run (filename) values (\'inital test\')').catch(logger);
+  execute('insert into run (filename) values (\'second test empty\')').catch(logger);
   setInterval(() => {
     config.tables.filter(t => t.name !== 'run').forEach(table => {
       var keys = Object.keys(table.fields).filter(key => key !== table.foreign_key && key !== table.primary_key );

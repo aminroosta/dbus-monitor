@@ -90,7 +90,7 @@ function init_table(id) {
     var count = api.rows().count();
     var tr = api.row(count-1).node();
 
-    var new_scroll_top = $(tr).offset().top - scrollbody.height();
+    var new_scroll_top = tr ? $(tr).offset().top - scrollbody.height() : 0;
 
     scrollbody.scrollTop(old_scroll_top);
     if(auto_scroll)
@@ -155,7 +155,6 @@ var loginterval = null;
 function update_log_table(clear) {
     var run_id = state.run.run_id;
     var last_id = state.run.last_id;
-    console.warn(clear);
     axios.get('/query/log/' + run_id + '/' + last_id)
          .then(function(data) {
            var rows = data.data.map(function(r) {
@@ -179,20 +178,17 @@ state.run_id_changed = function() {
 }/*----------------------------- run id changed ----------------------*/
 
 state.moinotr_interval_changed = function() {
-  var inter = state.monitor.inter;
-  console.warn(inter);
-  if(loginterval && inter) {
-      notify('Log table interval updated to ' + inter + ' seconds')
-      loginterval && clearInterval(loginterval);
-      loginterval = setInterval(update_log_table, (inter * 1000) || 15000);
-  }
 }
 
 state.monitor.set_interval = function() {
   var interval = state.monitor.interval;
   if(!interval) return notify('Invalid interval value', 'error');
-  /* send req */
+
   notify('New interval of ' + interval + ' is now set');
+  if(loginterval) {
+      loginterval && clearInterval(loginterval);
+      loginterval = setInterval(update_log_table, (interval * 1000) || 15000);
+  }
 }
 
 state.monitor.monitor_all = function(){
@@ -238,7 +234,3 @@ state.get_tables = function() {
 
 state.get_tables();
 rivets.bind($('body')[0], state); /* bind the dom elements */
-// var first_table = init_table('#first-table');
-// var second_table = init_table('#second-table');
-
-// second_table.add_rows([['amin','roosta','test', 'yey']])
