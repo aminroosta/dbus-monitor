@@ -53,20 +53,22 @@ srv.put('/monitor/file', function (req, res, next) {
   if(!file) return next(new Error("No file found in the request!"));
   var new_path = config.server.upload_dir + '/' + file.name;
   fs.renameSync(file.path, new_path);
+  /* TODO: talk to dbus server. 'new_path' it the file address of apploaded file. */
   res.send({ok: true, path: new_path});
   next();
 });
 
 
 srv.get('/mointor/all', function (req, res, next) {
+  /* TODO: talk to dbus server.*/
   res.send({ok: true})
   next();
 });
 srv.get('/mointor/pause', function (req, res, next) {
+  /* TODO: talk to dbus server.*/
   res.send({ok: true})
   next();
 });
-
 
 /* server static files */
 srv.get(/.*/, restify.serveStatic({

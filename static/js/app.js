@@ -120,7 +120,7 @@ function init_table_list(id) {
   }, 3000);
 };
 
-function update_select(first_time) {
+function update_select() {
   return axios.get('/query/run')
        .then(function(data) {
          var rows = data.data;
@@ -192,13 +192,17 @@ state.monitor.monitor_all = function(){
   axios.get('/mointor/all')
        .then(function() {
           notify('Monitor all request successful.');
-       }).catch(warn);
+       })
+       .catch(warn)
+       .then(update_select);
 }
 state.monitor.monitor_pause = function() {
   axios.get('/mointor/pause')
        .then(function() {
           notify('Monitor puase request successful');
-       }).catch(warn);
+       })
+       .catch(warn)
+       .then(update_select);
 }
 state.monitor.monitor_file = function() {
   var data = new FormData();
@@ -206,7 +210,7 @@ state.monitor.monitor_file = function() {
   var config = {
     progress: function(e) {
       var percent = e.loaded / e.total;
-      console.warn(percent);
+      // console.warn(percent);
     }
   };
   axios.put('/monitor/file', data, config)
@@ -215,7 +219,8 @@ state.monitor.monitor_file = function() {
     })
     .catch(function() {
       console.warn(arguments);
-    });
+    })
+    .then(update_select);
 }/*---------------------- monitor file --------------------------*/
 
 state.get_tables = function() {
@@ -228,7 +233,7 @@ state.get_tables = function() {
       state.run = tables[1];
       state.log = tables[2];
       init_table_list('#list-table');
-      update_select(true /* first_time */);
+      update_select();
       logtbl = init_table('#log-table');
     })
     .catch(function (error) {
